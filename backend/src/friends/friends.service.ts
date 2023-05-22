@@ -93,18 +93,32 @@ export class FriendsService {
                     },
                 ],
             });
-            const incomingRequestsArray = await this.friendRepository.findAll({
+            const incomingRequestsArray1 = await this.friendRepository.findAll({
                 where: {
                     to: id,
                     isRequested: true,
                     isAccepted: false,
                 },
             });
-            const outcomingRequestsArray = await this.friendRepository.findAll({
+            const incomingRequestsArray2 = await this.friendRepository.findAll({
+                where: {
+                    from: id,
+                    isRequested: false,
+                    isAccepted: true,
+                },
+            });
+            const outcomingRequestsArray1 = await this.friendRepository.findAll({
                 where: {
                     from: id,
                     isRequested: true,
                     isAccepted: false,
+                },
+            });
+            const outcomingRequestsArray2 = await this.friendRepository.findAll({
+                where: {
+                    to: id,
+                    isRequested: false,
+                    isAccepted: true,
                 },
             });
             if (q) {
@@ -138,8 +152,8 @@ export class FriendsService {
                                 Date.now() - +fromUser.lastSeen < 300000
                         ),
                     ].length,
-                    incomingRequests: incomingRequestsArray.length,
-                    outcomingRequests: outcomingRequestsArray.length,
+                    incomingRequests: incomingRequestsArray1.length + incomingRequestsArray2.length,
+                    outcomingRequests: outcomingRequestsArray1.length + outcomingRequestsArray2.length,
                 },
                 friends: clearFriends
                     .sort(
